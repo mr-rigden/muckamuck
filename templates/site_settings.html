@@ -1,0 +1,26 @@
+{% extends "dashboard_base.html" %}
+{% block content %}
+
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<div class="page-header">
+  			<h1 class="text-center">{{active_site.title}}<br> <small>Settings</small></h1>
+		</div>
+		<a href="/site/{{active_site.uuid}}/settings/info" type="button" class="btn btn-primary btn-lg btn-block">Info</a> 
+		<br>
+		<a href="/site/{{active_site.uuid}}/settings/theme" type="button" class="btn btn-primary btn-lg btn-block">Theme</a>
+		<br>
+		<a href="/site/{{active_site.uuid}}/settings/add_member" type="button" class="btn btn-primary btn-lg btn-block">Add Member</a>
+		<br>
+		<a href="/site/{{active_site.uuid}}/settings/remove_member" type="button" class="btn btn-primary btn-lg btn-block">Remove Member</a>
+		<br>
+		<br>
+		<br>
+		<a href="/site/{{active_site.uuid}}/settings/delete" type="button" class="btn btn-danger btn-lg btn-block">Delete</a>
+	</div>
+</div>
+
+
+
+{% endblock %}

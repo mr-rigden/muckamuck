@@ -1,0 +1,38 @@
+{% extends "dashboard_base.html" %}
+{% block content %}
+
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<div class="page-header">
+  			<h1 class="text-center">{{active_site.title}}<br> <small>Edit Site Information</small></h1>
+  		</div>
+  		<div>
+
+
+
+		    <form method="POST">
+		      {{ form.csrf_token }}
+		      <div class="form-group" >
+		        <div class="form-group">
+		        <label>Title</label>
+		          {% if form.site_title.errors %}
+		          <p class="errors">{% for error in form.site_title.errors %}{{ error }}{% endfor %}</p>
+		          {% endif %}
+		    	    <input type="title" class="form-control" id="site_title" name="site_title" placeholder="Site Title" value="{{form.site_title.data or ''}}">
+		      	</div>
+
+
+		          
+		          <button type="submit" class="btn btn-primary">Save</button>
+		      </div>
+		    </form>
+
+
+		</div>
+	</div>
+</div>
+
+
+
+{% endblock %}

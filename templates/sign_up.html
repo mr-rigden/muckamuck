@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+  	<h1>Register</h1>
+	<form method="POST" action="/sign_up">
+		{{ form.csrf_token }}
+	  <div class="form-group">
+	    <input  class="form-control" id="email" name="email" placeholder="Enter email">
+	    {% if form.email.errors %}
+        	<p class="errors">{% for error in form.email.errors %}{{ error }}{% endfor %}</p>
+    	{% endif %}
+
+	  </div>
+	  <div class="form-group">
+	    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+	    {% if form.password.errors %}
+	        <p class="errors">{% for error in form.password.errors %}{{ error }}{% endfor %}</p>
+    	{% endif %}
+	  </div>
+
+	  <div>
+	  	<h2>Terms of service</h2>
+	  	<h4>Do not violate these rules</h4>
+	  	<p>Violations may result in account susspentions and site deletion.</p>
+	  	<p>#1 Do not violate the copyrights of others.</p>
+	  	<p>#2 Do not engage in illegal or malicious activities.</p>
+	  </div>
+
+	  <button type="submit" class="btn btn-default">Submit</button>
+	</form>
+	</div>
+<div>
+{% endblock %}
