@@ -12,17 +12,27 @@ def sluggy(name):
     name = secure_filename(name)
     return name
 
+def parse_and_clean_tag(tags_string):
+    tags = []
+    temp_tags = tags_string.split(',')
+    for tag in temp_tags:
+        tag = tag.strip()
+        tag = sluggy(tag)
+        tags.append(tag)
+    return tags
+
+
 
 def reformat_domain_name(domain_name):
-	if not domain_name.startswith("http"):
-		logger.info('no http')
-		domain_name = "http://" + domain_name
-	parsed_domain_name = urlparse(domain_name)
-	try:
-		new_domain_name = secure_filename(parsed_domain_name.hostname)
-	except AttributeError:
-		new_domain_name = ""
-	return new_domain_name
+    if not domain_name.startswith("http"):
+        logger.info('no http')
+        domain_name = "http://" + domain_name
+    parsed_domain_name = urlparse(domain_name)
+    try:
+        new_domain_name = secure_filename(parsed_domain_name.hostname)
+    except AttributeError:
+        new_domain_name = ""
+    return new_domain_name
 
 
 ####################################################

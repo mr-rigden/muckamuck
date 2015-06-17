@@ -8,6 +8,7 @@ from werkzeug import secure_filename
 
 
 import forms
+import helpers
 from helpers import logger, sluggy, reformat_domain_name
 import models
 logger.info('log message')
@@ -25,6 +26,17 @@ app.config.from_pyfile('secret_config.py')
 ###################################################
 models.db.init_app(app) 
 mail = Mail(app)
+
+
+###################################################
+#Jinja Helpers
+###################################################
+@app.template_filter()
+def datetimefilter(value, format='%Y/%m/%d %H:%M'):
+    """convert a datetime to a different format."""
+    return value.strftime(format)
+
+app.jinja_env.filters['datetimefilter'] = datetimefilter
 
 
 #################################################
@@ -158,9 +170,8 @@ def add_site_page(user=None, sites=None):
 @login_required
 @site_membership_required
 def site_page(uuid, user=None, site=None, sites=None):
-    if site is None:
-        abort(404)
-    return render_template('site_page.html', user=user, sites=sites, active_site=site)
+    posts = site.get_posts()
+    return render_template('site_page.html', user=user, sites=sites, active_site=site, posts=posts)
 
 
 #################################################
@@ -194,6 +205,50 @@ def site_info_page(uuid, user=None, site=None, sites=None):
     else:
         form.site_title.data = site.title
     return render_template('site_info.html', user=user, sites=sites, active_site=site, form=form)
+
+
+#################################################
+#Create Post 
+#################################################
+@app.route('/site/<uuid>/post', methods=["GET", "POST"])
+@login_required
+@site_membership_required
+def new_post_page(uuid, user=None, site=None, sites=None):
+    form = forms.PostForm()
+    if form.validate_on_submit():
+        tags = helpers.parse_and_clean_tag(form.post_tags.data)
+        post = models.Post.create_post(site, user, form.post_body.data, form.post_description.data, tags, form.post_title.data)
+        return redirect(url_for('site_page', uuid=uuid))
+    return render_template('post.html', user=user, sites=sites, active_site=site, form=form)
+
+#################################################
+#Edit Post 
+#################################################
+@app.route('/site/<uuid>/post/<post_uuid>', methods=["GET", "POST"])
+@login_required
+@site_membership_required
+def edit_post_page(uuid, post_uuid, user=None, site=None, sites=None):
+    form = forms.PostForm()
+    try:
+        post = models.Post.get_by_uuid(post_uuid)
+    except DoesNotExist:
+            abort(404)
+    if request.method == 'POST':
+        if request.form['btn'] ==  'delete_post':
+            return "delete"
+    if form.validate_on_submit():
+        post.body = form.post_body.data
+        post.description = form.post_description.data
+        post.tags = helpers.parse_and_clean_tag(form.post_tags.data)
+        post.title = form.post_title.data
+        post.save()
+        return redirect(url_for('site_page', uuid=uuid))
+    else:
+        form.post_body.data = post.body
+        form.post_description.data = post.description
+        form.post_tags.data = ", ".join(post.tags)
+        form.post_title.data = post.title
+    return render_template('post.html', user=user, sites=sites, active_site=site, post=post, form=form, author=post.author)
 
 ###################################################
 ###################################################

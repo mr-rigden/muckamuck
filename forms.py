@@ -23,3 +23,10 @@ class EmailForm(Form):
 class SiteInfoForm(Form):
     site_title = StringField('site_title', validators=[validators.DataRequired()])
 
+class PostForm(Form):
+    post_body = StringField('post_body')
+    post_description = StringField('post_description', validators=[validators.DataRequired()])
+    post_featured_image = StringField('post_featured_image')
+    post_tags = StringField('post_tags')
+    post_title = StringField('post_title', validators=[validators.DataRequired()])
+

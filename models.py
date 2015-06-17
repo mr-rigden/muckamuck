@@ -109,6 +109,9 @@ class Site(db.Document):
         sites = Site.objects(members=user)
         return sites
 
+    def get_posts(self):
+        posts = Post.objects(site=self).order_by('-published')
+        return posts
 
     def check_membership(self, user):
         for member in self.members:
@@ -117,8 +120,37 @@ class Site(db.Document):
         return False
 
     def add_member(self, user):
-        self.update(add_to_set__members=[user,])
+        self.update(add_to_set__members=[user])
 
 
-class Site(db.Document):
-    create_date = db.DateTimeField(default=datetime.datetime.now, required=True)
+
+class Post(db.Document):
+    author = db.ReferenceField(User)
+    body = db.StringField()
+    description = db.StringField()
+    draft = db.BooleanField(default=False)
+    featured_image = db.StringField(max_length=255)
+    published = db.DateTimeField(default=datetime.datetime.now, required=True)
+    podcast_file = db.StringField(max_length=255)
+    site = db.ReferenceField(Site)
+    tags = db.ListField(db.StringField(max_length=255))
+    title = db.StringField(max_length=255)
+    uuid = db.StringField(max_length=22, required=True)
+
+    @staticmethod
+    def get_by_uuid(uuid):
+        post = Post.objects.get(uuid=uuid)
+        return post
+
+    @staticmethod
+    def create_post(site, user, body, description, tags, title):
+        post = Post()
+        post.author = user
+        post.body = body
+        post.description = description
+        post.site = site
+        post.tags = tags
+        post.title = title
+        post.uuid = shortuuid.ShortUUID().random()
+        post.save()
+        return post
