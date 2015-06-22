@@ -1,0 +1,7 @@
+# www.robotstxt.org/
+
+Sitemap: http://{{site.domain_name}}/sitemap.xml 
+
+# Allow crawling of all content
+User-agent: *
+Disallow:

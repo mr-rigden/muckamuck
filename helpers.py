@@ -1,7 +1,10 @@
+import datetime
+from email import utils
 import logging
 import logging.handlers
 import os
 from slugify import slugify, Slugify
+import time
 from urlparse import urlparse
 from werkzeug import secure_filename
 
@@ -25,6 +28,12 @@ def parse_and_clean_tag(tags_string):
         tag = sluggy(tag)
         tags.append(tag)
     return tags
+
+def rss_datetime(time_stamp):
+    time_stamp_tuple = time_stamp.timetuple()
+    timestamp = time.mktime(time_stamp_tuple)
+    time_string = utils.formatdate(timestamp)
+    return time_string
 
 
 

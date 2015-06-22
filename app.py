@@ -11,11 +11,11 @@ import forms
 import helpers
 from helpers import logger, sluggy, reformat_domain_name
 import models
-from tasks import hello
-logger.info('log message')
+
+from tasks import hello, initialize_site, render_post, update_site, update_site_tag
+
 app = Flask(__name__, instance_relative_config=True)
 
-hello.delay()
 ###################################################
 #Load Configuration Files
 ###################################################
@@ -26,7 +26,7 @@ app.config.from_object('secret_config')
 ###################################################
 #File System Setup
 ###################################################
-models.FILE_SYSTEM_ABSOLUTE_PATH = app.config["FILE_SYSTEM_ABSOLUTE_PATH"]
+#models.FILE_SYSTEM_ABSOLUTE_PATH = app.config["FILE_SYSTEM_ABSOLUTE_PATH"]
 
 ###################################################
 #Activate Flask Extension
@@ -163,6 +163,7 @@ def add_site_page(user=None, sites=None):
         domain_name = form.site_subdomain.data + ".mowich.net"
         try:
             site = models.Site.create_site( form.site_subdomain.data, domain_name, user, form.site_title.data)
+            initialize_site.delay(site.uuid)
         except NotUniqueError:
             flash("That Subdomain Is Already In Use")
             return redirect(url_for('add_site_page'))
@@ -221,11 +222,14 @@ def site_info_page(uuid, user=None, site=None, sites=None):
 @login_required
 @site_membership_required
 def new_post_page(uuid, user=None, site=None, sites=None):
-    hello.delay()
     form = forms.PostForm()
     if form.validate_on_submit():
         tags = helpers.parse_and_clean_tag(form.post_tags.data)
         post = models.Post.create_post(site, user, form.post_body.data, form.post_description.data, tags, form.post_title.data)
+        render_post.delay(post.uuid)
+        update_site.delay(site.uuid)
+        for tag in post.tags:
+            update_site_tag(site.uuid, tag)
         return redirect(url_for('site_page', uuid=uuid))
     return render_template('post.html', user=user, sites=sites, active_site=site, form=form)
 
@@ -249,10 +253,16 @@ def edit_post_page(uuid, post_uuid, user=None, site=None, sites=None):
     if form.validate_on_submit():
         post.body = form.post_body.data
         post.description = form.post_description.data
+        old_tags = post.tags
         post.tags = helpers.parse_and_clean_tag(form.post_tags.data)
         post.title = form.post_title.data
         post.save()
-        post.write_to_disk()
+        render_post.delay(post.uuid)
+        update_site.delay(site.uuid)
+        tags_to_update = old_tags + post.tags
+        tags_to_update = set(tags_to_update)
+        for tag in tags_to_update:
+            update_site_tag(site.uuid, tag)
         return redirect(url_for('site_page', uuid=uuid))
     else:
         form.post_body.data = post.body
