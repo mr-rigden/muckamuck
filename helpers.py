@@ -1,5 +1,6 @@
 import logging
 import logging.handlers
+import os
 from slugify import slugify, Slugify
 from urlparse import urlparse
 from werkzeug import secure_filename
@@ -7,10 +8,14 @@ from werkzeug import secure_filename
 
 custom_slugify = Slugify(to_lower=True)
 
+def make_directory(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
 def sluggy(name):
     name = custom_slugify(name)
     name = secure_filename(name)
-    return name
+    return name[:140]
 
 def parse_and_clean_tag(tags_string):
     tags = []

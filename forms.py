@@ -27,6 +27,6 @@ class PostForm(Form):
     post_body = StringField('post_body')
     post_description = StringField('post_description', validators=[validators.DataRequired()])
     post_featured_image = StringField('post_featured_image')
-    post_tags = StringField('post_tags')
-    post_title = StringField('post_title', validators=[validators.DataRequired()])
+    post_tags = StringField('post_tags', validators=[validators.Length(max=200)])
+    post_title = StringField('post_title', validators=[validators.DataRequired(), validators.Length(max=140)])
 

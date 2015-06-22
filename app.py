@@ -11,15 +11,22 @@ import forms
 import helpers
 from helpers import logger, sluggy, reformat_domain_name
 import models
+from tasks import hello
 logger.info('log message')
 app = Flask(__name__, instance_relative_config=True)
 
+hello.delay()
 ###################################################
 #Load Configuration Files
 ###################################################
 app.config.from_object('config')
-app.config.from_pyfile('secret_config.py')
-
+app.config.from_object('secret_config')
+#app.config.from_pyfile('secret_config.py')
+    
+###################################################
+#File System Setup
+###################################################
+models.FILE_SYSTEM_ABSOLUTE_PATH = app.config["FILE_SYSTEM_ABSOLUTE_PATH"]
 
 ###################################################
 #Activate Flask Extension
@@ -214,6 +221,7 @@ def site_info_page(uuid, user=None, site=None, sites=None):
 @login_required
 @site_membership_required
 def new_post_page(uuid, user=None, site=None, sites=None):
+    hello.delay()
     form = forms.PostForm()
     if form.validate_on_submit():
         tags = helpers.parse_and_clean_tag(form.post_tags.data)
@@ -235,13 +243,16 @@ def edit_post_page(uuid, post_uuid, user=None, site=None, sites=None):
             abort(404)
     if request.method == 'POST':
         if request.form['btn'] ==  'delete_post':
-            return "delete"
+            post.delete_from_disk()
+            post.delete()
+            return redirect(url_for('site_page', uuid=uuid))
     if form.validate_on_submit():
         post.body = form.post_body.data
         post.description = form.post_description.data
         post.tags = helpers.parse_and_clean_tag(form.post_tags.data)
         post.title = form.post_title.data
         post.save()
+        post.write_to_disk()
         return redirect(url_for('site_page', uuid=uuid))
     else:
         form.post_body.data = post.body
@@ -249,6 +260,9 @@ def edit_post_page(uuid, post_uuid, user=None, site=None, sites=None):
         form.post_tags.data = ", ".join(post.tags)
         form.post_title.data = post.title
     return render_template('post.html', user=user, sites=sites, active_site=site, post=post, form=form, author=post.author)
+
+
+
 
 ###################################################
 ###################################################
