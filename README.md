@@ -16,6 +16,12 @@ Todo
  - ~~Make todo list~~
  - Write install guide
 
+##Testing
+ - py.test models.py
+ - py.test render.py
+ - py.test tasks.py
+
+
 ## Contributors
 **Jason Rigden**
 ## License
