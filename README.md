@@ -4,7 +4,26 @@ As seen at [Mowich.net](http://mowich.net)
 
 
 ## Installation
-Todo
+
+*Tested only on Ubuntu Server 14.04.2 LTS*
+
+**Requirements**
+
+- Python 2.7
+- Redis
+- PostgreSQL
+- Nginx
+- virtualenvwrapper
+
+**Instructions**
+
+1. ```$ mkdir muckamuck```
+2. ```$ cd muckamuck```
+3. ```$ mkvirtualenv muckamuck```
+4. ```$ git clone https://github.com/jrigden/muckamuck.git```
+5. ```$ cd muckamuck```
+6. ```$ pip install -r requirements.txt```
+7. ```$ cp dummy_config.py config.py```
 
 ##Basic Usage
 
