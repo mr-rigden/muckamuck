@@ -6,6 +6,10 @@ As seen at [Mowich.net](http://mowich.net)
 ## Installation
 Todo
 
+##Basic Usage
+
+```$ celery -A tasks worker -l info```
+
 ## Change Log
 
  1. Cleaned up github repo
