@@ -17,7 +17,7 @@ Todo
  - Write install guide
 
 ## Contributors
- - **Jason Rigden**
+**Jason Rigden**
 ## License
 **The MIT License (MIT)**
 Copyright (c) 2015 Jason Rigden
