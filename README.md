@@ -17,9 +17,12 @@ Todo
  - Write install guide
 
 ##Testing
- - py.test models.py
- - py.test render.py
- - py.test tasks.py
+
+```$ py.test models.py```
+
+```$ py.test render.py```
+
+```$ py.test tasks.py```
 
 
 ## Contributors
