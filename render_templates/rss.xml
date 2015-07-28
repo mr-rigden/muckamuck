@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+   <channel>
+   	  <atom:link href="http://{{site.domain_name}}/rss.xml" rel="self" type="application/rss+xml" />
+      <title>{{site.title}}</title>
+      <link>http://{{site.domain}}</link>
+      <description>{{site.description}}</description>
+      <language>{{site.language}}</language>
+      <pubDate>{{ rss_datetime(posts[0].created_date) }}</pubDate>
+      <lastBuildDate>>{{ rss_datetime(posts[0].created_date) }}</lastBuildDate>
+      <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+      <generator>Muckamuck V.0</generator>
+      <managingEditor>{{site.owner.public_email}}</managingEditor>
+      <webMaster>{{site.owner.public_email}}</webMaster>
+      {% for post in posts %}
+	      <item>
+	         <title>{{post.title}} City</title>
+	         <link>http://{{site.domain}}/post/{{post.slug}}.html</link>
+	         <description>{{post.description}}</description>
+	         <pubDate>{{ rss_datetime(post.created_date) }}</pubDate>
+	         <guid>http://{{site.domain}}/post/{{post.slug}}.html</guid>
+	      </item>
+	   {% endfor %}
+   </channel>
+</rss>
