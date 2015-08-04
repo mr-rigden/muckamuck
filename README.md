@@ -7,23 +7,26 @@ As seen at [Mowich.net](http://mowich.net)
 
 *Tested only on Ubuntu Server 14.04.2 LTS*
 
-**Requirements**
-
-- Python 2.7
-- Redis
-- PostgreSQL
-- Nginx
-- virtualenvwrapper
 
 **Instructions**
 
-1. ```$ mkdir muckamuck```
-2. ```$ cd muckamuck```
-3. ```$ mkvirtualenv muckamuck```
-4. ```$ git clone https://github.com/jrigden/muckamuck.git```
-5. ```$ cd muckamuck```
-6. ```$ pip install -r requirements.txt```
-7. ```$ cp dummy_config.py config.py```
+
+1. ```$ sudo apt-get update```
+2. ```$ sudo apt-get upgrade```
+3. ```$ sudo apt-get install build-essential libffi-dev python-dev```
+3. Install Python pip: https://pip.pypa.io/en/latest/installing.html
+4. Install Python virtualenv: https://virtualenv.pypa.io/en/latest/installation.html
+5. Install Python virtualenvwrapper: https://virtualenvwrapper.readthedocs.org/en/latest/
+6. Install Redis: http://redis.io/topics/quickstart If you have ```missing LSB tags and overrides``` see https://github.com/antirez/redis/issues/804 and use ```$ use sudo utils/install_server.sh```
+7. Install MariaDB: https://downloads.mariadb.org/mariadb/repositories
+8. Build nginx with ngx_pagespeed: https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
+9. ```$ mkdir muckamuck```
+10. ```$ cd muckamuck```
+11. ```$ mkvirtualenv muckamuck```
+12. ```$ git clone https://github.com/jrigden/muckamuck.git```
+13. ```$ cd muckamuck```
+14. ```$ pip install -r requirements.txt```
+15. ```$ cp dummy_config.py config.py```
 
 ##Basic Usage
 
