@@ -6,44 +6,53 @@ As seen at [Mowich.net](http://mowich.net)
 ## Installation
 
 *Tested only on Ubuntu Server 14.04.2 LTS*
+###Settings
+1. Choose database name, database username, database password for MariaDB
+2. Create output directory and note full path
 
-
-**Instructions**
-
-
+###System
 1. ```$ sudo apt-get update```
 2. ```$ sudo apt-get upgrade```
-3. ```$ sudo apt-get install build-essential libffi-dev python-dev```
-3. Install Python pip: https://pip.pypa.io/en/latest/installing.html
-4. Install Python virtualenv: https://virtualenv.pypa.io/en/latest/installation.html
-5. Install Python virtualenvwrapper: https://virtualenvwrapper.readthedocs.org/en/latest/
-6. Install Redis: http://redis.io/topics/quickstart If you have ```missing LSB tags and overrides``` see https://github.com/antirez/redis/issues/804 and use ```$ use sudo utils/install_server.sh```
-7. Install MariaDB: https://downloads.mariadb.org/mariadb/repositories
-8. Build nginx with ngx_pagespeed: https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
-9. ```$ mkdir muckamuck```
-10. ```$ cd muckamuck```
-11. ```$ mkvirtualenv muckamuck```
-12. ```$ git clone https://github.com/jrigden/muckamuck.git```
-13. ```$ cd muckamuck```
-14. ```$ pip install -r requirements.txt```
-15. ```$ cp dummy_config.py config.py```
+3. ```$ sudo apt-get install build-essential libffi-dev python-dev git```
+3. ```$ sudo apt-get install libmariadbclient-dev libssl-dev```
+4. ```$ git clone https://github.com/jrigden/muckamuck.git```
 
-##Basic Usage
+###Python
+1. ```$ cd muckamuck```
+2. Install Python pip: https://pip.pypa.io/en/latest/installing.html
+3. Install Python virtualenv: https://virtualenv.pypa.io/en/latest/installation.html
+4. Install Python virtualenvwrapper: https://virtualenvwrapper.readthedocs.org/en/latest/
+5. ```$ mkvirtualenv muckamuck```
+5. ```$ pip install -r requirements.txt```
 
-```$ celery -A tasks worker -l info```
+###Redis
+1. Install Redis: http://redis.io/topics/quickstart If you have ```missing LSB tags and overrides``` see https://github.com/antirez/redis/issues/804 and use ```$ use sudo utils/install_server.sh```
 
-## Change Log
+###MariaDB
+1. Install MariaDB: https://downloads.mariadb.org/mariadb/repositories
+2. Login in to MariaDB as root ```$ mysql -u root -p```
+3. ```CREATE DATABASE database_name;```
+4. ```CREATE USER 'username'@'%' IDENTIFIED BY 'password';```
+5. ```GRANT ALL PRIVILEGES ON database_name.* to 'username'@'%'      IDENTIFIED BY  'password';```
+6. ```FLUSH PRIVILEGES;```
 
- 1. Cleaned up github repo
+###Nginx with pagespeed
+1. Build nginx with ngx_pagespeed: https://developers.google.com/speed/pagespeed/module/build_ngx_pagespeed_from_source
+2. Need nginx config file
+
+###Environment Variables
+1. Edit the virtualenv ```$ nano $VIRTUAL_ENV/bin/postactivate```
+2. Add ```export MUCKAMUCK_OUTPUT_DIRECTORY="output directory"```
+3. Add ```export MUCKAMUCK_DB_HOST="db host location"```
+4. Add ```export MUCKAMUCK_DB_USER_NAME="db user name"```
+5. Add ```export MUCKAMUCK_DB_USER_PASSWORD="db user password"```
+5. Add ```export MUCKAMUCK_SITES_DOMIAN="muckamuck.net"```
 
 
-## Todo
-
- - ~~Make todo list~~
- - Write install guide
+###File System
+1. ```$ python install.py```
 
 ##Testing
-
 ```$ py.test models.py```
 
 ```$ py.test render.py```
