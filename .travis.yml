@@ -1,9 +1,14 @@
 language: python
 python:
   - "2.7"
+addons:
+  apt:
+    packages:
+    - python-mysqldb
+
 # command to install dependencies
 before_install:
-  - sudo apt-get install -y python-mysqldb
+  - mkdir output 
   - mysql -e 'create database database_name;'
   - pip install -q flake8
   - pip install PyMySQL
@@ -19,7 +24,7 @@ services:
   - mysql
 
 env:
-  MUCKAMUCK_OUTPUT_DIRECTORY="/home/jason/Desktop/New/test"
+  MUCKAMUCK_OUTPUT_DIRECTORY="output"
   MUCKAMUCK_DB_HOST="127.0.0.1"
   MUCKAMUCK_DB_NAME="database_name"
   MUCKAMUCK_DB_USER_NAME="travis"
