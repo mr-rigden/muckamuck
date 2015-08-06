@@ -12,5 +12,6 @@ services:
 env:
   MUCKAMUCK_OUTPUT_DIRECTORY="/home/jason/Desktop/New/test"
   MUCKAMUCK_DB_HOST="127.0.0.1"
+  MUCKAMUCK_DB_NAME="database_name"
   MUCKAMUCK_DB_USER_NAME="travis"
   MUCKAMUCK_DB_USER_PASSWORD=""
