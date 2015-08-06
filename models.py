@@ -9,13 +9,6 @@ from peewee import *
 import shortuuid
 import unittest
 
-from helper import OUTPUT_PATHS, DB_INFO
-from helper import make_dir
-####################################################
-# Misc Setup
-####################################################
-fake = faker.Factory.create()
-
 ####################################################
 # Logging Boilerplate
 ####################################################
@@ -32,6 +25,48 @@ file_handle = logging.FileHandler('muchamuck_models.log')
 file_handle.setFormatter(formatter)
 logger.addHandler(file_handle)
 #logger.info('log message')
+
+####################################################
+#Config
+####################################################
+DB_INFO = {}
+DB_INFO['host'] = os.environ['MUCKAMUCK_DB_HOST']
+DB_INFO['name'] = os.environ['MUCKAMUCK_DB_NAME']
+DB_INFO['username'] = os.environ['MUCKAMUCK_DB_USER_NAME']
+DB_INFO['password'] = os.environ['MUCKAMUCK_DB_USER_PASSWORD']
+
+OUTPUT_PATHS = {}
+OUTPUT_PATHS['root'] =  os.environ['MUCKAMUCK_OUTPUT_DIRECTORY']
+
+OUTPUT_PATHS['audio']  = os.path.join(OUTPUT_PATHS['root'], "audio")
+OUTPUT_PATHS['css']  = os.path.join(OUTPUT_PATHS['root'], "css")
+OUTPUT_PATHS['hbs']  = os.path.join(OUTPUT_PATHS['root'], "hbs")
+OUTPUT_PATHS['img']  = os.path.join(OUTPUT_PATHS['root'], "img")
+
+OUTPUT_PATHS['js']  = os.path.join(OUTPUT_PATHS['root'], "js")
+
+OUTPUT_PATHS['json']  = os.path.join(OUTPUT_PATHS['root'], "json")
+OUTPUT_PATHS['json_site']  = os.path.join(OUTPUT_PATHS['json'], "site")
+OUTPUT_PATHS['json_system']  = os.path.join(OUTPUT_PATHS['json'], "system")
+OUTPUT_PATHS['json_user']  = os.path.join(OUTPUT_PATHS['json'], "user")
+
+OUTPUT_PATHS['site']  = os.path.join(OUTPUT_PATHS['root'], "site")
+OUTPUT_PATHS['site_domain']  = os.path.join(OUTPUT_PATHS['site'], "domain")
+OUTPUT_PATHS['site_id']  = os.path.join(OUTPUT_PATHS['site'], "id")
+
+####################################################
+# Setup
+####################################################
+fake = faker.Factory.create()
+
+####################################################
+# Misc Helpers
+####################################################
+def make_dir(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+
 
 ####################################################
 # Database Connection
