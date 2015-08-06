@@ -1,0 +1,16 @@
+language: python
+python:
+  - "2.7"
+# command to install dependencies
+install: "pip install -r requirements.txt"
+# command to run tests
+script: nosetests
+
+services:
+  - mysql
+
+env:
+  MUCKAMUCK_OUTPUT_DIRECTORY="/home/jason/Desktop/New/test"
+  MUCKAMUCK_DB_HOST="127.0.0.1"
+  MUCKAMUCK_DB_USER_NAME="travis"
+  MUCKAMUCK_DB_USER_PASSWORD=""
