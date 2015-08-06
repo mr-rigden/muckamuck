@@ -1,4 +1,4 @@
-#muckamuck
+#muckamuck [![Build Status](https://travis-ci.org/jrigden/muckamuck.svg?branch=master)](https://travis-ci.org/jrigden/muckamuck)
 A Multi-site Blog/Podcast Management System written in python.
 As seen at [Mowich.net](http://mowich.net)
 
