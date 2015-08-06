@@ -9,7 +9,7 @@ from peewee import *
 import shortuuid
 import unittest
 
-from helper import OUTPUT_PATHS
+from helper import OUTPUT_PATHS, DB_INFO
 from helper import make_dir
 ####################################################
 # Misc Setup
@@ -36,8 +36,7 @@ logger.addHandler(file_handle)
 ####################################################
 # Database Connection
 ####################################################
-db = MySQLDatabase('database_name', host="localhost",
-                   user='username', password="password")
+db = MySQLDatabase(DB_INFO['name'], host=DB_INFO['host'], user=DB_INFO['username'], password=DB_INFO['password'])
 
 
 ####################################################
@@ -50,9 +49,8 @@ def jsonifyer(someDict):
 # Base Model
 ####################################################
 class BaseModel(Model):
-  class Meta:
-    database = db
-
+    class Meta:
+        database = db
 
 
 
@@ -69,7 +67,6 @@ class User(BaseModel):
     twitter = CharField(default="")
     facebook = CharField(default="")
     google = CharField(default="")
-
     customer_id = CharField(default="")
     uuid = CharField(index=True)
 
@@ -128,9 +125,62 @@ def create_dummy_user():
 ####################################################
 # Site Model
 ####################################################
+json_site_subdirs = ["archive", "category", "page", "post", "tag"]
+
 class Site(BaseModel):
+    created_date = DateTimeField(default=datetime.datetime.now)
     description = CharField(null=True)
     domain = CharField(unique=True)
     language = CharField(default="en-us")
     owner = ForeignKeyField(User)
+    subscription_level = CharField(default="free", index=True)
     title = CharField()
+    uuid = CharField(index=True)
+
+    def generate_UUID(self):
+        self.uuid = shortuuid.ShortUUID().random()
+
+    def to_dict(self):
+            siteDict = {}
+            siteDict["created_date"] = self.created_date.isoformat()
+            siteDict["description"] = self.description
+            siteDict["domain"] = self.domain
+            siteDict["language"] = self.language
+            siteDict["owner"] = self.owner.uuid
+            siteDict["subscription_level"] = self.subscription_level
+            siteDict["title"] = self.title
+            siteDict["uuid"] = self.uuid
+            return siteDict
+
+    def get_site_dir_path(self):
+        return os.path.join(OUTPUT_PATHS.get("json_site"), self.uuid)
+
+    def get_site_dir_subdir_path(self, dir_name):
+        return os.path.join(OUTPUT_PATHS.get("json_site"), self.uuid, dir_name)
+
+
+    def make_dir(self):
+        make_dir(self.get_site_dir_path())
+        for subdir in json_site_subdirs:
+            make_dir(self.get_site_dir_subdir_path(subdir))
+
+    def get_json_path(self):
+        return os.path.join(self.get_site_dir_path(), "about.json")
+
+    def write_json(self):
+        self.make_dir()
+        user_dict = self.to_dict()
+        file_object = open(self.get_json_path(), "wb")
+        file_object.write(jsonifyer(user_dict))
+        file_object.close()
+
+def create_dummy_site():
+    user = create_dummy_user()
+    user.save()
+    site = Site()
+    site.description = fake.text(max_nb_chars=200)
+    site.domain = fake.domain_name()
+    site.owner = user
+    site.title = fake.sentence(nb_words=6, variable_nb_words=True)
+    site.generate_UUID()
+    return site

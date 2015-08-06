@@ -44,9 +44,10 @@ As seen at [Mowich.net](http://mowich.net)
 1. Edit the virtualenv ```$ nano $VIRTUAL_ENV/bin/postactivate```
 2. Add ```export MUCKAMUCK_OUTPUT_DIRECTORY="output directory"```
 3. Add ```export MUCKAMUCK_DB_HOST="db host location"```
-4. Add ```export MUCKAMUCK_DB_USER_NAME="db user name"```
-5. Add ```export MUCKAMUCK_DB_USER_PASSWORD="db user password"```
-5. Add ```export MUCKAMUCK_SITES_DOMIAN="muckamuck.net"```
+4. Add ```export MUCKAMUCK_DB_NAME="database name"```
+5. Add ```export MUCKAMUCK_DB_USER_NAME="db user name"```
+6. Add ```export MUCKAMUCK_DB_USER_PASSWORD="db user password"```
+7. Add ```export MUCKAMUCK_SITES_DOMIAN="muckamuck.net"```
 
 
 ###File System
