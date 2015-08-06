@@ -1,4 +1,9 @@
-#muckamuck [![Build Status](https://travis-ci.org/jrigden/muckamuck.svg?branch=master)](https://travis-ci.org/jrigden/muckamuck)
+#muckamuck
+
+[![GitHub version](https://badge.fury.io/gh/jrigden%2Fmuckamuck.svg)](http://badge.fury.io/gh/jrigden%2Fmuckamuck) [![Build Status](https://travis-ci.org/jrigden/muckamuck.svg?branch=master)](https://travis-ci.org/jrigden/muckamuck) [![Dependency Status](https://gemnasium.com/jrigden/muckamuck.svg)](https://gemnasium.com/jrigden/muckamuck)
+![](https://reposs.herokuapp.com/?path=jrigden/muckamuck&color=brightgreen)
+
+
 A Multi-site Blog/Podcast Management System written in python.
 As seen at [Mowich.net](http://mowich.net)
 
