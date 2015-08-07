@@ -24,7 +24,7 @@ script:
   - nosetests
 
 after_success:
-  - coverage run --include=test_models.py  test_models.py
+  - coverage run --include=models.py  test_models.py
   - coverage combine
   - coveralls
 
