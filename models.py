@@ -219,9 +219,3 @@ def create_dummy_site():
     site.title = fake.sentence(nb_words=6, variable_nb_words=True)
     site.generate_UUID()
     return site
-
-def test_coverage():
-    print "tolo"
-    x = 4*4
-    s = 4*4
-    return 4*4
