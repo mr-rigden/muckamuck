@@ -21,7 +21,7 @@ install:
 
 # command to run tests
 script:
-  -nosetests
+  - nosetests
 
 after_success:
   - coverage run --include=test_models.py  test_models.py
