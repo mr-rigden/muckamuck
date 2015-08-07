@@ -93,6 +93,8 @@ class BaseModel(Model):
 # User Model
 ####################################################
 class User(BaseModel):
+    """The User Object.
+    """
     created_date = DateTimeField(default=datetime.datetime.now)
     email = CharField(index=True, unique=True)
     password = CharField(null=True)
@@ -106,9 +108,15 @@ class User(BaseModel):
     uuid = CharField(index=True)
 
     def generate_UUID(self):
+    """This function generates a shortish UUID.
+    """
         self.uuid = shortuuid.ShortUUID().random()
 
     def encrypt_password(self, password):
+    """This function encrypts password with bcrypt
+    :param name: password
+    :type name: str.
+    """
         self.password = bcrypt.encrypt(password)
 
     def verify_password(self, password):
