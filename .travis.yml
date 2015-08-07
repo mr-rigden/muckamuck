@@ -15,9 +15,10 @@ before_install:
   - pip install mysql-python
 
 install:
-  - pip install coveralls
   - pip install -q mysql-python
   - pip install -r requirements.txt
+  - pip install coveralls
+
 # command to run tests
 script:
   -nosetests
