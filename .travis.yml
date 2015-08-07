@@ -8,17 +8,24 @@ addons:
 
 # command to install dependencies
 before_install:
-  - mkdir output 
+  - mkdir output
   - mysql -e 'create database database_name;'
   - pip install -q flake8
   - pip install PyMySQL
   - pip install mysql-python
 
 install:
+  - pip install coverall
   - pip install -q mysql-python
   - pip install -r requirements.txt
 # command to run tests
-script: nosetests
+script:
+  -nosetests
+
+after_success:
+  - coverage run --include=test_models.py  test_models.py
+  - coverage combine
+  - coveralls
 
 services:
   - mysql
