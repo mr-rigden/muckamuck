@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import faker
 import json
@@ -30,6 +31,11 @@ logger.addHandler(file_handle)
 #Config
 ####################################################
 DB_INFO = {}
+"""int: Module level variable documented inline.
+
+The docstring may span multiple lines. The type may optionally be specified
+on the first line, separated by a colon.
+"""
 DB_INFO['host'] = os.environ['MUCKAMUCK_DB_HOST']
 DB_INFO['name'] = os.environ['MUCKAMUCK_DB_NAME']
 DB_INFO['username'] = os.environ['MUCKAMUCK_DB_USER_NAME']
@@ -108,15 +114,15 @@ class User(BaseModel):
     uuid = CharField(index=True)
 
     def generate_UUID(self):
-    """This function generates a shortish UUID.
-    """
+        """This function generates a shortish UUID.
+        """
         self.uuid = shortuuid.ShortUUID().random()
 
     def encrypt_password(self, password):
-    """This function encrypts password with bcrypt
-    :param name: password
-    :type name: str.
-    """
+        """This function encrypts password with bcrypt
+        :param name: password
+        :type name: str.
+        """
         self.password = bcrypt.encrypt(password)
 
     def verify_password(self, password):
