@@ -4,8 +4,9 @@ import shutil
 import unittest
 
 
-from models import db, fake, logger, Site, User
+from models import db, fake, Site, User
 from models import create_dummy_user, create_dummy_site
+import utilities
 
 
 
@@ -25,12 +26,12 @@ def cleanDB():
     db.drop_tables([Site])
   except OperationalError:
     pass
-    #logger.debug('Site table did non exists')
+    #utilities.logger.debug('Site table did non exists')
   try:
     db.drop_tables([User])
   except OperationalError:
     pass
-    #logger.debug('User table did non exists')
+    #utilities.logger.debug('User table did non exists')
 
 
 ####################################################
@@ -46,11 +47,10 @@ class SiteTest(unittest.TestCase):
     cleanDB()
     db.close()
 
-  def test_Count_Sitess(self):
+  def test_Count_Sites(self):
     for i in range(10):
       site = create_dummy_site()
       site.save()
-      # print user.to_json()
     self.assertEqual(Site.select().count(), 10)
 
   def test_Create_Site(self):
@@ -88,13 +88,15 @@ class UserTest(unittest.TestCase):
     for i in range(10):
       user = create_dummy_user()
       user.save()
+      print user.json_path
+      print "888888888888888888888888888888888"
       # print user.to_json()
     self.assertEqual(User.select().count(), 10)
 
   def test_Create_User(self):
     user_email = fake.free_email()
     user = User()
-    user.generate_UUID()
+    user.uuid = utilities.generate_UUID()
     original_uuid = user.uuid
     user.email = user_email
     user.save()
@@ -105,12 +107,12 @@ class UserTest(unittest.TestCase):
     user_email = fake.free_email()
 
     user1 = User()
-    user1.generate_UUID()
+    user1.uuid = utilities.generate_UUID()
     user1.email = user_email
     user1.save()
 
     user2 = User()
-    user2.generate_UUID()
+    user2.uuid = utilities.generate_UUID()
     user2.email = user_email
     with self.assertRaises(IntegrityError):
       user2.save()
@@ -121,7 +123,7 @@ class UserTest(unittest.TestCase):
     user = User()
     user.email = user_email
     user.encrypt_password(user_password)
-    user.generate_UUID()
+    user.uuid = utilities.generate_UUID()
     user.save()
     self.assertTrue(user.verify_password(user_password))
 
@@ -130,7 +132,7 @@ class UserTest(unittest.TestCase):
     user_password = fake.password()
     user = User()
     user.email = user_email
-    user.generate_UUID()
+    user.uuid = utilities.generate_UUID()
     user.save()
     with self.assertRaises(TypeError):
       user.verify_password(user_password)
@@ -142,7 +144,7 @@ class UserTest(unittest.TestCase):
     user = User()
     user.email = user_email
     user.encrypt_password(user_password)
-    user.generate_UUID()
+    user.uuid = utilities.generate_UUID()
     user.save()
     self.assertFalse(user.verify_password(user_BADpassword))
 
