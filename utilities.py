@@ -1,3 +1,4 @@
+import faker
 import json
 import logging
 import logging.handlers
@@ -40,6 +41,12 @@ def get_output_json_path():
 ####################################################
 # Misc
 ####################################################
+fake = faker.Factory.create()
+"""Initialize a faker generator.
+
+This provides all the fake data using in the create dummy functions
+"""
+
 def generate_UUID():
     """Generats Shortish UUID.
 

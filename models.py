@@ -3,13 +3,11 @@
 """
 
 import datetime
-import faker
 import json
 
 import os
 from passlib.hash import bcrypt
 from peewee import *
-import shortuuid
 import unittest
 
 import utilities
@@ -38,14 +36,7 @@ OUTPUT_PATHS['site'] = os.path.join(OUTPUT_PATHS['root'], "site")
 OUTPUT_PATHS['site_domain'] = os.path.join(OUTPUT_PATHS['site'], "domain")
 OUTPUT_PATHS['site_id'] = os.path.join(OUTPUT_PATHS['site'], "id")
 
-####################################################
-# Setup
-####################################################
-fake = faker.Factory.create()
-"""Initialize a faker generator.
 
-This provides all the fake data using in the create dummy functions
-"""
 
 ####################################################
 # Misc Helpers
@@ -202,21 +193,21 @@ class User(BaseModel):
 
 
 def create_dummy_user():
-    """Generats a fake user.
+    """Generats a utilities.fake user.
 
     Yields:
-            User: One fake user.
+            User: One utilities.fake user.
     """
     user = User()
     user.uuid = utilities.generate_UUID()
-    user.email = fake.free_email()
-    user.encrypt_password(fake.password())
-    user.name = fake.name()
-    user.public_email = fake.free_email()
-    user.bio = fake.text()
-    user.twitterID = shortuuid.ShortUUID().random()
-    user.facebookID = shortuuid.ShortUUID().random()
-    user.googleID = shortuuid.ShortUUID().random()
+    user.email = utilities.fake.free_email()
+    user.encrypt_password(utilities.fake.password())
+    user.name = utilities.fake.name()
+    user.public_email = utilities.fake.free_email()
+    user.bio = utilities.fake.text()
+    user.twitterID = utilities.generate_UUID()
+    user.facebookID = utilities.generate_UUID()
+    user.googleID = utilities.generate_UUID()
     return user
 
 
@@ -308,17 +299,17 @@ class Site(BaseModel):
 
 
 def create_dummy_site():
-    """Generats a fake site.
+    """Generats a utilities.fake site.
 
     Yields:
-        Site: One fake site.
+        Site: One utilities.fake site.
     """
     user = create_dummy_user()
     user.save()
     site = Site()
-    site.description = fake.text(max_nb_chars=200)
-    site.domain = fake.domain_name()
+    site.description = utilities.fake.text(max_nb_chars=200)
+    site.domain = utilities.fake.domain_name()
     site.owner = user
-    site.title = fake.sentence(nb_words=6, variable_nb_words=True)
+    site.title = utilities.fake.sentence(nb_words=6, variable_nb_words=True)
     site.uuid = utilities.generate_UUID()
     return site

@@ -4,7 +4,7 @@ import shutil
 import unittest
 
 
-from models import db, fake, Site, User
+from models import db, Site, User
 from models import create_dummy_user, create_dummy_site
 import utilities
 
@@ -94,7 +94,7 @@ class UserTest(unittest.TestCase):
     self.assertEqual(User.select().count(), 10)
 
   def test_Create_User(self):
-    user_email = fake.free_email()
+    user_email = utilities.fake.free_email()
     user = User()
     user.uuid = utilities.generate_UUID()
     original_uuid = user.uuid
@@ -104,7 +104,7 @@ class UserTest(unittest.TestCase):
     self.assertEqual(user2.uuid, user.uuid)
 
   def test_Create_Duplicate_User(self):
-    user_email = fake.free_email()
+    user_email = utilities.fake.free_email()
 
     user1 = User()
     user1.uuid = utilities.generate_UUID()
@@ -118,8 +118,8 @@ class UserTest(unittest.TestCase):
       user2.save()
 
   def test_User_Password(self):
-    user_email = fake.free_email()
-    user_password = fake.password()
+    user_email = utilities.fake.free_email()
+    user_password = utilities.fake.password()
     user = User()
     user.email = user_email
     user.encrypt_password(user_password)
@@ -128,8 +128,8 @@ class UserTest(unittest.TestCase):
     self.assertTrue(user.verify_password(user_password))
 
   def test_User_BlankPassword(self):
-    user_email = fake.free_email()
-    user_password = fake.password()
+    user_email = utilities.fake.free_email()
+    user_password = utilities.fake.password()
     user = User()
     user.email = user_email
     user.uuid = utilities.generate_UUID()
@@ -138,9 +138,9 @@ class UserTest(unittest.TestCase):
       user.verify_password(user_password)
 
   def test_User_BadPassword(self):
-    user_email = fake.free_email()
-    user_password = fake.password()
-    user_BADpassword = fake.password()
+    user_email = utilities.fake.free_email()
+    user_password = utilities.fake.password()
+    user_BADpassword = utilities.fake.password()
     user = User()
     user.email = user_email
     user.encrypt_password(user_password)
