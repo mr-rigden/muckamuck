@@ -6,7 +6,7 @@
 Welcome to muckamuck's documentation!
 =====================================
 
-Contents:
+A Multi-site Blog/Podcast Management System written in python. As seen at Mowich.net
 
 .. toctree::
    :maxdepth: 2
@@ -15,12 +15,6 @@ Contents:
    code.rst
 
 
-Indices and tables
-==================
-
-.. code-block:: bash
-
-   $ sudo apt-get update
 
 * :ref:`genindex`
 * :ref:`modindex`

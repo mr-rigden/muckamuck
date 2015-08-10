@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""All the models for muckamuchk
+"""
+
 import datetime
 import faker
 import json
@@ -31,11 +34,7 @@ logger.addHandler(file_handle)
 #Config
 ####################################################
 DB_INFO = {}
-"""int: Module level variable documented inline.
 
-The docstring may span multiple lines. The type may optionally be specified
-on the first line, separated by a colon.
-"""
 DB_INFO['host'] = os.environ['MUCKAMUCK_DB_HOST']
 DB_INFO['name'] = os.environ['MUCKAMUCK_DB_NAME']
 DB_INFO['username'] = os.environ['MUCKAMUCK_DB_USER_NAME']
@@ -64,11 +63,18 @@ OUTPUT_PATHS['site_id']  = os.path.join(OUTPUT_PATHS['site'], "id")
 # Setup
 ####################################################
 fake = faker.Factory.create()
+"""Initialize a faker generator.
+
+This provides all the fake data using in the create dummy functions
+"""
 
 ####################################################
 # Misc Helpers
 ####################################################
 def make_dir(directory):
+    """Nicely make directories.
+
+    """
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -78,19 +84,34 @@ def make_dir(directory):
 # Database Connection
 ####################################################
 db = MySQLDatabase(DB_INFO['name'], host=DB_INFO['host'], user=DB_INFO['username'], password=DB_INFO['password'])
+"""Initialize database connection.
 
+Database connection values from env variables
+"""
 
 ####################################################
 # Utilities
 ####################################################
 def jsonifyer(someDict):
-    return json.dumps(someDict, sort_keys=True, indent=4, separators=(',', ': '))
+    """Provides standardization of pretty json
 
+    Args:
+        someDict (dict): Any JSON compatible dictionary
+
+    Returns:
+        JSON string
+
+    """
+    return json.dumps(someDict, sort_keys=True, indent=4, separators=(',', ': '))
 ####################################################
 # Base Model
 ####################################################
 class BaseModel(Model):
+    """This is the base model class that all other models inherit
+    """
     class Meta:
+        """All models use same db
+        """
         database = db
 
 
@@ -99,7 +120,32 @@ class BaseModel(Model):
 # User Model
 ####################################################
 class User(BaseModel):
-    """The User Object.
+    """This is the User model.
+
+    Attributes:
+        created_date (datetime): When user was created.
+
+        email (str): User email.
+
+        password (str): encrypted and salted password.
+
+        public_email (str): Publicly accessible user email.
+
+        name (str): Publicly accessible user name.
+
+        bio (str): Publicly accessible user bio.
+
+        twitter (str):  Publicly accessible user twitter ID.
+
+        facebook (str): Publicly accessible user facebook ID.
+
+        google (str):  Publicly accessible user googl ID.
+
+        customer_id (str): User customer is for billing.
+
+        uuid (str): A universally unique identifier assigned to user.
+
+
     """
     created_date = DateTimeField(default=datetime.datetime.now)
     email = CharField(index=True, unique=True)
@@ -114,42 +160,72 @@ class User(BaseModel):
     uuid = CharField(index=True)
 
     def generate_UUID(self):
-        """This function generates a shortish UUID.
+        """Generats Shortish UUID.
+
+        Note:
+            Result is assigned to uuid.
+
         """
         self.uuid = shortuuid.ShortUUID().random()
 
     def encrypt_password(self, password):
-        """This function encrypts password with bcrypt
-        :param name: password
-        :type name: str.
+        """Generates a hashes and salted password.
+
+        Note:
+            Hashed password is assigned to password.
+
+        Args:
+            password (str): The plain text password entered by human
         """
         self.password = bcrypt.encrypt(password)
 
     def verify_password(self, password):
+        """Validated a submitted password.
+
+        Args:
+            password (str): The plain text password entered by human
+
+        Returns:
+            True if successful, False otherwise.
+        """
         return bcrypt.verify(password, self.password)
 
     def to_dict(self):
-            userDict = {}
-            userDict["created_date"] = self.created_date.isoformat()
-            userDict["email"] = self.public_email
-            userDict["name"] = self.name
-            userDict["uuid"] = self.uuid
-            userDict["bio"] = self.bio
-            userDict["twitter"] = self.twitterID
-            userDict["facebook"] = self.facebookID
-            userDict["google"] = self.googleID
-            return userDict
+        """Creats dictionary with private info redacted.
+
+
+        Returns:
+            Dictionary
+        """
+        userDict = {}
+        userDict["created_date"] = self.created_date.isoformat()
+        userDict["email"] = self.public_email
+        userDict["name"] = self.name
+        userDict["uuid"] = self.uuid
+        userDict["bio"] = self.bio
+        userDict["twitter"] = self.twitterID
+        userDict["facebook"] = self.facebookID
+        userDict["google"] = self.googleID
+        return userDict
 
     def make_dir(self):
+        """make_dir.
+        """
         make_dir(self.get_user_dir_path())
 
     def get_user_dir_path(self):
+        """make_dir.
+        """
         return os.path.join(OUTPUT_PATHS.get("json_user"), self.uuid)
 
     def get_json_path(self):
+        """make_dir.
+        """
         return os.path.join(self.get_user_dir_path(), "about.json")
 
     def write_json(self):
+        """make_dir.
+        """
         self.make_dir()
         user_dict = self.to_dict()
         file_object = open(self.get_json_path(), "wb")
@@ -158,6 +234,11 @@ class User(BaseModel):
 
 
 def create_dummy_user():
+    """Generats a fake user.
+
+    Yields:
+        User: One fake user.
+    """
     user = User()
     user.generate_UUID()
     user.email = fake.free_email()
@@ -177,6 +258,27 @@ def create_dummy_user():
 json_site_subdirs = ["archive", "category", "page", "post", "tag"]
 
 class Site(BaseModel):
+    """This is the Site model.
+
+    Attributes:
+        created_date (datetime): When site was created.
+
+        description (str): Site description.
+
+        domain (str): active domain name.
+
+        language (str): Site language. Defaults to en-us.
+
+        owner (User): User that owns site.
+
+        subscription_level (str): Customer subscription level.
+
+        title (str):  Name of site.
+
+        uuid (str): A universally unique identifier assigned to site.
+
+
+    """
     created_date = DateTimeField(default=datetime.datetime.now)
     description = CharField(null=True)
     domain = CharField(unique=True)
@@ -187,36 +289,57 @@ class Site(BaseModel):
     uuid = CharField(index=True)
 
     def generate_UUID(self):
+        """Generats Shortish UUID.
+
+        Note:
+            Result is assigned to uuid.
+
+        """
         self.uuid = shortuuid.ShortUUID().random()
 
     def to_dict(self):
-            siteDict = {}
-            siteDict["created_date"] = self.created_date.isoformat()
-            siteDict["description"] = self.description
-            siteDict["domain"] = self.domain
-            siteDict["language"] = self.language
-            siteDict["owner"] = self.owner.uuid
-            siteDict["subscription_level"] = self.subscription_level
-            siteDict["title"] = self.title
-            siteDict["uuid"] = self.uuid
-            return siteDict
+        """Creats dictionary with private info redacted.
+
+        Returns:
+            Dictionary
+        """
+        siteDict = {}
+        siteDict["created_date"] = self.created_date.isoformat()
+        siteDict["description"] = self.description
+        siteDict["domain"] = self.domain
+        siteDict["language"] = self.language
+        siteDict["owner"] = self.owner.uuid
+        siteDict["subscription_level"] = self.subscription_level
+        siteDict["title"] = self.title
+        siteDict["uuid"] = self.uuid
+        return siteDict
 
     def get_site_dir_path(self):
+        """make_dir.
+        """
         return os.path.join(OUTPUT_PATHS.get("json_site"), self.uuid)
 
     def get_site_dir_subdir_path(self, dir_name):
+        """make_dir.
+        """
         return os.path.join(OUTPUT_PATHS.get("json_site"), self.uuid, dir_name)
 
 
     def make_dir(self):
+        """make_dir.
+        """
         make_dir(self.get_site_dir_path())
         for subdir in json_site_subdirs:
             make_dir(self.get_site_dir_subdir_path(subdir))
 
     def get_json_path(self):
+        """make_dir.
+        """
         return os.path.join(self.get_site_dir_path(), "about.json")
 
     def write_json(self):
+        """make_dir.
+        """
         self.make_dir()
         user_dict = self.to_dict()
         file_object = open(self.get_json_path(), "wb")
@@ -224,6 +347,11 @@ class Site(BaseModel):
         file_object.close()
 
 def create_dummy_site():
+    """Generats a fake site.
+
+    Yields:
+        Site: One fake site.
+    """
     user = create_dummy_user()
     user.save()
     site = Site()
