@@ -9,7 +9,8 @@ As seen at [Mowich.net](http://mowich.net)
 [![GitHub version](https://badge.fury.io/gh/jrigden%2Fmuckamuck.svg)](http://badge.fury.io/gh/jrigden%2Fmuckamuck) [![Build Status](https://travis-ci.org/jrigden/muckamuck.svg?branch=master)](https://travis-ci.org/jrigden/muckamuck) [![Coverage Status](https://coveralls.io/repos/jrigden/muckamuck/badge.svg?branch=master&service=github)](https://coveralls.io/github/jrigden/muckamuck?branch=master) [![Dependency Status](https://gemnasium.com/jrigden/muckamuck.svg)](https://gemnasium.com/jrigden/muckamuck)
 
 ## Documentation
-[View Docs](http://muckamuck.readthedocs.org/en/latest/) [![Documentation Status](https://readthedocs.org/projects/muckamuck/badge/?version=latest)](https://readthedocs.org/projects/muckamuck/?badge=latest)
+
+[![Documentation Status](https://readthedocs.org/projects/muckamuck/badge/?version=latest)](http://muckamuck.readthedocs.org/en/latest/) 
 
 ## Contributors
 **Jason Rigden**
